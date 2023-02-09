@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 /* const bcrypt = require('bcrypt') */
 /* const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); */
@@ -6,34 +6,30 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); */
 const PORT = process.env.PORT */
 
 const UserScheme = new mongoose.Schema(
-    {
-      email:{
-        type:String,
-        required: true,
-        unique: true
-      },
-      password:{
-        type: String,
-        required: true
-      },
-      role:{
-        type: [Number]
-      },
-      name:{
-        type: String,
-      },
-      profileImage: {
-        type: String
-      },
-      company_id: {
-        type: mongoose.ObjectId,
-        ref: 'users'
-      }
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
-    {
-      timestamps:true,
-      versionKey:false
-    }
-  );
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: [Number],
+    },
+    name: {
+      type: String,
+    },
+    profileImage: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
-module.exports = mongoose.model("users", UserScheme)
+module.exports = mongoose.model("Users", UserScheme);
