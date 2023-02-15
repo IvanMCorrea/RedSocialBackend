@@ -48,16 +48,44 @@ const usersController = {
 
   getUsers: async (req, res) => {
     try {
-      const data = await User.find({});
-      console.log("users:", data);
+      let user = null;
+      const authorization = req.get("authorization");
+      let token = null;
+      if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+        token = authorization.substring(7);
+      }
+      const decodedToken = getTokenData(token);
+      if (decodedToken) {
+        user = await User.findOne({ username: decodedToken.data.username });
+      }
+      const page = req.params.page;
+      const keyword = req.query.keyword || null;
+      const filter = {
+        username: {
+          $regex: keyword,
+          $options: "i",
+        },
+      };
+      const pageNumber = parseInt(page);
+      const limit = 20;
+      const skip = (pageNumber - 1) * limit;
+      const totalDocuments = await User.count();
+      const totalPages = Math.ceil(totalDocuments / limit);
+      const data = await User.find({
+        $and: [{ _id: { $ne: user._id } }, keyword ? filter : {}],
+      })
+        .skip(skip)
+        .limit(limit);
+
       res.status(200).send({
         success: true,
         data,
+        totalPages,
       });
     } catch (error) {
       console.log(error);
       res.status(400).send({
-        success: true,
+        success: false,
         error,
       });
     }
