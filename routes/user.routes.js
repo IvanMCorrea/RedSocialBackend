@@ -9,7 +9,7 @@ router.post(
   upload.single("profileImage"),
   usersController.register
 );
-router.get("/users/:page", usersController.getUsers);
+router.get("/users/:page", usersController.getNetwork);
 router.get("/info", usersController.info);
 
 module.exports = router;

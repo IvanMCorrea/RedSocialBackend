@@ -46,7 +46,7 @@ const usersController = {
     }
   },
 
-  getUsers: async (req, res) => {
+  getNetwork: async (req, res) => {
     try {
       let user = null;
       const authorization = req.get("authorization");
