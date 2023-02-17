@@ -13,6 +13,13 @@ const UserScheme = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    avatar: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
@@ -22,8 +29,15 @@ const UserScheme = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
     },
-    profileImage: {
+    description: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    status: {
       type: String,
     },
   },
@@ -41,8 +55,8 @@ UserScheme.pre("save", function (next) {
       next();
     });
   }
-  if (!this.profileImage) {
-    this.profileImage = `${APP_HOST}:${PORT}/default/user_default.png`;
+  if (!this.avatar) {
+    this.avatar = `${APP_HOST}:${PORT}/default/user_default.png`;
   }
 });
 
@@ -56,11 +70,19 @@ UserScheme.methods.comparePassword = async function (password) {
   }
 };
 
-UserScheme.methods.setProfileImage = function (filename) {
+UserScheme.methods.setProfileImage = function (filename, username) {
   if (filename) {
-    this.profileImage = `${APP_HOST}:${PORT}/storage/${filename}`;
+    this.avatar = `${APP_HOST}:${PORT}/storage/${username}/${filename}`;
   } else {
-    this.profileImage = `${APP_HOST}:${PORT}/default/user_default.png`;
+    this.avatar = `${APP_HOST}:${PORT}/default/user_default.png`;
+  }
+};
+
+UserScheme.methods.setCoverImage = function (filename, username) {
+  if (filename) {
+    this.image = `${APP_HOST}:${PORT}/storage/${username}/${filename}`;
+  } else {
+    this.image = `${APP_HOST}:${PORT}/default/user_default.png`;
   }
 };
 

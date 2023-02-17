@@ -6,7 +6,10 @@ const upload = require("../middlewares/upload.middleware");
 router.post("/login", usersController.login);
 router.post(
   "/register",
-  upload.single("profileImage"),
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "image", maxCount: 1 },
+  ]),
   usersController.register
 );
 router.get("/users/:page", usersController.getNetwork);

@@ -6,9 +6,8 @@ const usersController = {
   register: async (req, res) => {
     try {
       const { body } = req;
-      console.log("body: ", body);
-
-      const filename = req.file ? req.file.filename : false;
+      const avatar = req.files["avatar"] ? req.files["avatar"][0] : false;
+      const coverImage = req.files["image"] ? req.files["image"][0] : false;
       let user = (await User.findOne({ username: body.username })) || null;
 
       if (user) {
@@ -26,8 +25,12 @@ const usersController = {
           msg: "Error al registrar usuario",
         });
       } else {
-        const token = getToken({ username: body.username });
-        await newUser.setProfileImage(filename);
+        const token = getToken({
+          username: body.username,
+          password: body.password,
+        });
+        await newUser.setProfileImage(avatar, body.username);
+        coverImage && (await newUser.setCoverImage(coverImage, body.username));
         const userStored = await newUser.save();
         res.status(200).send({
           success: true,

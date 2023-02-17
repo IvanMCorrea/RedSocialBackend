@@ -3,17 +3,16 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (!fs.existsSync("storage")) {
-      fs.mkdir("storage", (error) => {
-        console.log(error);
-      });
-    }
-    cb(null, "storage");
+    const path = `storage/${req.body.username}`;
+    fs.mkdir(path, { recursive: true }, (err) => {
+      if (err) throw err;
+      cb(null, path);
+    });
   },
   filename: (req, file, cb) => {
-    /* const ext = file.originalname.split(".").pop(); */
+    console.log("file", file);
     const ext = file.mimetype.split("/").pop();
-    cb(null, `${Date.now()}.${ext}`);
+    cb(null, `${file.fieldname}.${ext}`);
   },
 });
 const upload = multer({ storage });
