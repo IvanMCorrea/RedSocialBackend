@@ -72,7 +72,7 @@ UserScheme.methods.comparePassword = async function (password) {
 
 UserScheme.methods.setProfileImage = function (filename, username) {
   if (filename) {
-    this.avatar = `${APP_HOST}:${PORT}/storage/${username}/${filename}`;
+    this.avatar = `${APP_HOST}:${PORT}/storage/${username}/${filename.fieldname}`;
   } else {
     this.avatar = `${APP_HOST}:${PORT}/default/user_default.png`;
   }
@@ -80,7 +80,7 @@ UserScheme.methods.setProfileImage = function (filename, username) {
 
 UserScheme.methods.setCoverImage = function (filename, username) {
   if (filename) {
-    this.image = `${APP_HOST}:${PORT}/storage/${username}/${filename}`;
+    this.image = `${APP_HOST}:${PORT}/storage/${username}/${filename.fieldname}`;
   } else {
     this.image = `${APP_HOST}:${PORT}/default/user_default.png`;
   }

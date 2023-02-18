@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
     });
   },
   filename: (req, file, cb) => {
-    console.log("file", file);
     const ext = file.mimetype.split("/").pop();
     cb(null, `${file.fieldname}.${ext}`);
   },
