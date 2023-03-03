@@ -128,21 +128,27 @@ const usersController = {
   },
 
   info: async (req, res) => {
-    const authorization = req.get("authorization");
-    let token = null;
-    if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-      token = authorization.substring(7);
-    }
-    const decodedToken = getTokenData(token);
-    if (decodedToken) {
-      const user = await User.findOne({ username: decodedToken.data.username });
-      if (user) {
-        res.status(200).send({ success: true, user });
-      } else {
-        res.status(404).send({ succes: false, auth: "no auth, no user" });
+    try {
+      const authorization = req.get("authorization");
+      let token = null;
+      if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+        token = authorization.substring(7);
       }
-    } else {
-      res.status(400).send({ succes: false, auth: "no auth" });
+      const decodedToken = getTokenData(token);
+      if (decodedToken) {
+        const user = await User.findOne({
+          username: decodedToken.data.username,
+        });
+        if (user) {
+          res.status(200).send({ success: true, user });
+        } else {
+          res.status(404).send({ succes: false, auth: "no auth, no user" });
+        }
+      } else {
+        res.status(400).send({ succes: false, auth: "no auth" });
+      }
+    } catch (error) {
+      res.status(400).send({ succes: false, auth: "no token" });
     }
   },
 };
