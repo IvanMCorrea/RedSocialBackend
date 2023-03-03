@@ -5,7 +5,6 @@ const PostScheme = new mongoose.Schema(
     usernameId: {
       type: String,
       required: true,
-      unique: true,
     },
     image: {
       type: String,
