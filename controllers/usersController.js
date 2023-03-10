@@ -151,6 +151,22 @@ const usersController = {
       res.status(400).send({ succes: false, auth: "no token" });
     }
   },
+
+  getProfileInfo: async (req, res) => {
+    try {
+      const { username } = req.params;
+      const user = await User.findOne({
+        username: username
+      });
+      if (user) {
+        res.status(200).send({ success: true, user });
+      } else {
+        res.status(404).send({ succes: false, auth: "no auth, no user" });
+      }
+    } catch (error) {
+      res.status(400).send({ succes: false, auth: "no token" });
+    }
+  },
 };
 
 module.exports = usersController;
