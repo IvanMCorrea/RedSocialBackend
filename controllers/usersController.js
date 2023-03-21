@@ -156,7 +156,7 @@ const usersController = {
     try {
       const { username } = req.params;
       const user = await User.findOne({
-        username: username
+        username: username,
       });
       if (user) {
         res.status(200).send({ success: true, user });

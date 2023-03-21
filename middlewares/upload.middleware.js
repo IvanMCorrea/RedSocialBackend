@@ -3,7 +3,9 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = `storage/${req.body.username}`;
+    const path = req.body.username
+      ? `storage/users/${req.body.username}`
+      : `storage/posts`;
     fs.mkdir(path, { recursive: true }, (err) => {
       if (err) throw err;
       cb(null, path);
@@ -11,7 +13,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split("/").pop();
-    cb(null, `${file.fieldname}.${ext}`);
+    cb(null, `${file.fieldname}${Date.now()}.${ext}`);
   },
 });
 const upload = multer({ storage });
