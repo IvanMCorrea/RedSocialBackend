@@ -42,6 +42,8 @@ const postsController = {
       let post = {
         usernameId: user._id,
         description,
+        image: "",
+        likes: [],
       };
 
       const newPost = await Post(post);

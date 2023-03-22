@@ -28,7 +28,9 @@ const PostScheme = new mongoose.Schema(
 );
 PostScheme.methods.setPostImage = function (filename) {
   if (filename) {
-    this.image = `${APP_HOST}:${PORT}/storage/posts/${filename.filename}`;
+    this.image = `${APP_HOST}:${PORT}/storage/posts/${
+      filename.filename
+    }${Date.now()}`;
   }
 };
 module.exports = mongoose.model("Post", PostScheme);
