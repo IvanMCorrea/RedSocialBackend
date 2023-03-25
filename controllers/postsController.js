@@ -31,8 +31,8 @@ const postsController = {
   },
   create: async (req, res) => {
     try {
-      const { description } = req.body;
-
+      const { data } = req.body;
+      console.log(data);
       const postImage = req.file ? req.file : false;
       let user = null;
       const authorization = req.get("authorization");
@@ -47,7 +47,7 @@ const postsController = {
 
       let post = {
         usernameId: user._id,
-        description,
+        description: data,
         image: "",
         likes: [],
       };
