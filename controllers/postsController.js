@@ -79,13 +79,11 @@ const postsController = {
   getPostsById: async (req, res) => {
     const { id } = req.params;
     try {
-      const data = Post.find({ usernameId: id });
-      let totalPages = 0;
+      const data = await Post.find({ usernameId: id });
       res.status(200).send({
         success: true,
         msg: "Post loaded!",
         data,
-        totalPages,
       });
     } catch (error) {
       console.log(error);
