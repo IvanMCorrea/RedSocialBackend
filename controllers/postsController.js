@@ -4,11 +4,19 @@ const { getToken, getTokenData } = require("../config/jwt.config");
 const postsController = {
   getPosts: async (req, res) => {
     try {
-      let data = {};
-      let totalPages = 0;
+      const page = req.params.page;
+      const pageNumber = parseInt(page);
+      const limit = 20;
+      const skip = (pageNumber - 1) * limit;
+      const totalDocuments = await Post.count();
+      const totalPages = Math.ceil(totalDocuments / limit);
+      const data = await Post.find()
+        .skip(skip)
+        .limit(limit)
+        .populate("usernameId");
       res.status(200).send({
         success: true,
-        msg: "Post created!",
+        msg: "Posts loaded!",
         data,
         totalPages,
       });
@@ -24,10 +32,8 @@ const postsController = {
   create: async (req, res) => {
     try {
       const { description } = req.body;
-      console.log("req.files ", req.file);
-      const postImage = req.file ? req.file : false;
-      console.log("postImage ", postImage);
 
+      const postImage = req.file ? req.file : false;
       let user = null;
       const authorization = req.get("authorization");
       let token = null;
@@ -66,6 +72,26 @@ const postsController = {
       res.status(409).send({
         success: false,
         msg: "Error creating post",
+        error: error,
+      });
+    }
+  },
+  getPostsById: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = Post.find({ usernameId: id });
+      let totalPages = 0;
+      res.status(200).send({
+        success: true,
+        msg: "Post loaded!",
+        data,
+        totalPages,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(409).send({
+        success: false,
+        msg: "Error getting posts",
         error: error,
       });
     }

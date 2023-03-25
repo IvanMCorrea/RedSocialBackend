@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const postsController = require("../controllers/postsController");
-const upload = require("../middlewares/upload.middleware");
+const uploadPost = require("../middlewares/uploadPost.middleware");
 
 router.get("/", postsController.getPosts);
-router.post("/create", upload.single("image"), postsController.create);
-
+router.post("/create", uploadPost.single("image"), postsController.create);
+router.get("/:id", postsController.getPostsById);
 module.exports = router;

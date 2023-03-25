@@ -10,6 +10,7 @@ const PostScheme = new mongoose.Schema(
       type: mongoose.ObjectId,
       ref: "Users",
       required: true,
+      unique: false,
     },
     image: {
       type: String,
@@ -28,9 +29,7 @@ const PostScheme = new mongoose.Schema(
 );
 PostScheme.methods.setPostImage = function (filename) {
   if (filename) {
-    this.image = `${APP_HOST}:${PORT}/storage/posts/${
-      filename.filename
-    }${Date.now()}`;
+    this.image = `${APP_HOST}:${PORT}/storage/posts/${filename.filename}`;
   }
 };
 module.exports = mongoose.model("Post", PostScheme);
