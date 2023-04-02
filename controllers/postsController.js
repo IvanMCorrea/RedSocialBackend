@@ -1,19 +1,21 @@
 const { Post, User } = require("../models");
 const { getToken, getTokenData } = require("../config/jwt.config");
+const mongoose = require("mongoose");
 
 const postsController = {
   getPosts: async (req, res) => {
     try {
       const page = req.params.page;
       const pageNumber = parseInt(page);
-      const limit = 20;
+      const limit = 5;
       const skip = (pageNumber - 1) * limit;
       const totalDocuments = await Post.count();
       const totalPages = Math.ceil(totalDocuments / limit);
       const data = await Post.find()
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate("usernameId");
+        .populate([{path:"usernameId", select: "-password"}, "likes"]);
       res.status(200).send({
         success: true,
         msg: "Posts loaded!",
@@ -90,6 +92,35 @@ const postsController = {
       res.status(409).send({
         success: false,
         msg: "Error getting posts",
+        error: error,
+      });
+    }
+  },
+  updateLikes: async (req, res) => {
+    try {
+      const { data } = req.body;
+      const userId = (data.userId)
+      const postId = data.postId
+      const like = await Post.findOne({ _id: postId, likes: userId })
+      if (like) {
+        const dat = await Post.updateOne({ _id: postId },{ $pull: { likes: userId } })
+        console.log(dat)
+        res.status(200).send({
+          success: true,
+          msg: "Like deleted!",
+        });
+      } else {
+        await Post.updateOne({ _id: postId }, { $push: { likes: userId } })
+        res.status(200).send({
+          success: true,
+          msg: "Like added!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(409).send({
+        success: false,
+        msg: "Error updating post likes",
         error: error,
       });
     }
