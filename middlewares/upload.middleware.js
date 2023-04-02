@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = req.body.username`storage/users/${req.body.username}`;
+    const path = `storage/users/${req.body.username}`;
     fs.mkdir(path, { recursive: true }, (err) => {
       if (err) throw err;
       cb(null, path);
