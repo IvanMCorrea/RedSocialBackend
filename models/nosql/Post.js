@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const APP_HOST = process.env.APP_HOST;
-/* const PORT = process.env.PORT; */
 
 const PostScheme = new mongoose.Schema(
   {
@@ -33,7 +32,7 @@ const PostScheme = new mongoose.Schema(
 PostScheme.methods.setPostImage = function (filename) {
   console.log("host:",APP_HOST)
   if (filename) {
-    this.image = `${APP_HOST}${PORT && `:${PORT}`}/storage/posts/${filename.filename}`;
+    this.image = `${APP_HOST}/storage/posts/${filename.filename}`;
   }
 };
 module.exports = mongoose.model("Post", PostScheme);

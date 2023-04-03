@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const APP_HOST = process.env.APP_HOST;
-/* const PORT = process.env.PORT; */
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -72,17 +71,17 @@ UserScheme.methods.comparePassword = async function (password) {
 
 UserScheme.methods.setProfileImage = function (filename, username) {
   if (filename) {
-    this.avatar = `${APP_HOST}${PORT && `:${PORT}`}/storage/${username}/${filename.filename}`;
+    this.avatar = `${APP_HOST}/storage/${username}/${filename.filename}`;
   } else {
-    this.avatar = `${APP_HOST}${PORT && `:${PORT}`}/default/user_default.png`;
+    this.avatar = `${APP_HOST}/default/user_default.png`;
   }
 };
 
 UserScheme.methods.setCoverImage = function (filename, username) {
   if (filename) {
-    this.image = `${APP_HOST}${PORT && `:${PORT}`}/storage/${username}/${filename.filename}`;
+    this.image = `${APP_HOST}/storage/${username}/${filename.filename}`;
   } else {
-    this.image = `${APP_HOST}${PORT && `:${PORT}`}/default/user_default.png`;
+    this.image = `${APP_HOST}/default/user_default.png`;
   }
 };
 
