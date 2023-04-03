@@ -79,7 +79,7 @@ UserScheme.methods.setProfileImage = function (filename, username) {
 
 UserScheme.methods.setCoverImage = function (filename, username) {
   if (filename) {
-    this.image = `${APP_HOST}/storage/${username}/${filename.filename}`;
+    this.image = `${APP_HOST}/storage/users/${username}/${filename.filename}`;
   } else {
     this.image = `${APP_HOST}/default/user_default.png`;
   }
