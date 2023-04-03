@@ -56,7 +56,7 @@ UserScheme.pre("save", function (next) {
     });
   }
   if (!this.avatar) {
-    this.avatar = `${APP_HOST}:${PORT}/default/user_default.png`;
+    this.avatar = `${APP_HOST}${PORT && `:${PORT}`}/default/user_default.png`;
   }
 });
 
@@ -72,17 +72,17 @@ UserScheme.methods.comparePassword = async function (password) {
 
 UserScheme.methods.setProfileImage = function (filename, username) {
   if (filename) {
-    this.avatar = `${APP_HOST}:${PORT}/storage/${username}/${filename.filename}`;
+    this.avatar = `${APP_HOST}${PORT && `:${PORT}`}/storage/${username}/${filename.filename}`;
   } else {
-    this.avatar = `${APP_HOST}:${PORT}/default/user_default.png`;
+    this.avatar = `${APP_HOST}${PORT && `:${PORT}`}/default/user_default.png`;
   }
 };
 
 UserScheme.methods.setCoverImage = function (filename, username) {
   if (filename) {
-    this.image = `${APP_HOST}:${PORT}/storage/${username}/${filename.filename}`;
+    this.image = `${APP_HOST}${PORT && `:${PORT}`}/storage/${username}/${filename.filename}`;
   } else {
-    this.image = `${APP_HOST}:${PORT}/default/user_default.png`;
+    this.image = `${APP_HOST}${PORT && `:${PORT}`}/default/user_default.png`;
   }
 };
 

@@ -32,7 +32,7 @@ const PostScheme = new mongoose.Schema(
 );
 PostScheme.methods.setPostImage = function (filename) {
   if (filename) {
-    this.image = `${APP_HOST}:${PORT}/storage/posts/${filename.filename}`;
+    this.image = `${APP_HOST}${PORT && `:${PORT}`}/storage/posts/${filename.filename}`;
   }
 };
 module.exports = mongoose.model("Post", PostScheme);
