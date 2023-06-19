@@ -227,11 +227,11 @@ const usersController = {
           msg: "Usuarios Registrados!",
         });
       } else {
-        res.status(400).send({ succes: false, auth: "no auth" });
+        res.status(400).send({ succes: false, auth: "Falta autorización" });
       }
     } catch (error) {
       console.error(error);
-      res.status(400).send({ succes: false, auth: "error" });
+      res.status(400).send({ succes: false, auth: "error en función" });
     }
   },
 };
