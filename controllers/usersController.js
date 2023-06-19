@@ -183,41 +183,44 @@ const usersController = {
             let datos = await fetch(charUrl);
             let response = await datos.json();
             let avatar = null;
-            await response.results.forEach((element) => {
-              const formData = new FormData();
-              let name = element.name.replace(/ /g, "");
-              let pass = name;
-              let address =
-                element.location && element.location.name
-                  ? element.location.name
-                  : "unknown";
-              let email = `${name}Account@mail.com`;
-              avatar = element.image ? element.image : null;
-              let account = {
-                username: name,
-                password: pass,
-                email: email,
-                address: address,
-                ...element,
-              };
-              for (const key in account) {
-                if (account.hasOwnProperty(key)) {
-                  formData.append(key, account[key]);
+            await Promise.all(
+              response.results.forEach((element) => {
+                const formData = new FormData();
+                let name = element.name.replace(/ /g, "");
+                let pass = name;
+                let address =
+                  element.location && element.location.name
+                    ? element.location.name
+                    : "unknown";
+                let email = `${name}Account@mail.com`;
+                avatar = element.image ? element.image : null;
+                let account = {
+                  username: name,
+                  password: pass,
+                  email: email,
+                  address: address,
+                  ...element,
+                };
+                for (const key in account) {
+                  if (account.hasOwnProperty(key)) {
+                    formData.append(key, account[key]);
+                  }
                 }
-              }
-              if (avatar)
-                fetch(avatar)
-                  .then((response) => response.blob())
-                  .then((imageBlob) => {
-                    const file = new File([imageBlob], "avatar.jpg", {
-                      type: "image/jpeg",
+                if (avatar)
+                  fetch(avatar)
+                    .then((response) => response.blob())
+                    .then((imageBlob) => {
+                      const file = new File([imageBlob], "avatar.jpg", {
+                        type: "image/jpeg",
+                      });
+                      formData.append("avatar", file);
+                    })
+                    .then(async () => {
+                      const res = await register(formData);
+                      console.log(res);
                     });
-                    formData.append("avatar", file);
-                  })
-                  .then(async () => {
-                    await register(formData);
-                  });
-            });
+              })
+            );
           } catch (error) {
             console.error(error);
           }
