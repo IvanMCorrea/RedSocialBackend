@@ -1,6 +1,7 @@
 /* const bcrypt = require("bcrypt"); */
 const { User } = require("../models");
 const { getToken, getTokenData } = require("../config/jwt.config");
+const https = require("https");
 
 const usersController = {
   register: async (req, res) => {
@@ -165,76 +166,6 @@ const usersController = {
       }
     } catch (error) {
       res.status(400).send({ succes: false, auth: "no token" });
-    }
-  },
-
-  seedNetwork: async (req, res) => {
-    try {
-      const authorization = req.get("authorization");
-      let token = null;
-      if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-        token = authorization.substring(7);
-      }
-      const decodedToken = getTokenData(token);
-      if (decodedToken) {
-        for (let index = 1; index < 42; index++) {
-          let charUrl = `https://rickandmortyapi.com/api/character?page=${index}`;
-          try {
-            let datos = await fetch(charUrl);
-            let response = await datos.json();
-            let avatar = null;
-            await Promise.all(
-              response.results.forEach((element) => {
-                const formData = new FormData();
-                let name = element.name.replace(/ /g, "");
-                let pass = name;
-                let address =
-                  element.location && element.location.name
-                    ? element.location.name
-                    : "unknown";
-                let email = `${name}Account@mail.com`;
-                avatar = element.image ? element.image : null;
-                let account = {
-                  username: name,
-                  password: pass,
-                  email: email,
-                  address: address,
-                  ...element,
-                };
-                for (const key in account) {
-                  if (account.hasOwnProperty(key)) {
-                    formData.append(key, account[key]);
-                  }
-                }
-                if (avatar)
-                  fetch(avatar)
-                    .then((response) => response.blob())
-                    .then((imageBlob) => {
-                      const file = new File([imageBlob], "avatar.jpg", {
-                        type: "image/jpeg",
-                      });
-                      formData.append("avatar", file);
-                    })
-                    .then(async () => {
-                      const res = await register(formData);
-                      console.log(res);
-                    });
-              })
-            );
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        res.status(200).send({
-          success: true,
-          msg: "Usuarios Registrados!",
-        });
-      } else {
-        res.status(400).send({ succes: false, auth: "Falta autorización" });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(400).send({ succes: false, auth: "error en función" });
     }
   },
 };
