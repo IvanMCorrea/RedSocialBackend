@@ -167,6 +167,73 @@ const usersController = {
       res.status(400).send({ succes: false, auth: "no token" });
     }
   },
+
+  seedNetwork: async (req, res) => {
+    try {
+      const authorization = req.get("authorization");
+      let token = null;
+      if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+        token = authorization.substring(7);
+      }
+      const decodedToken = getTokenData(token);
+      if (decodedToken) {
+        for (let index = 1; index < 42; index++) {
+          let charUrl = `https://rickandmortyapi.com/api/character?page=${index}`;
+          try {
+            let datos = await fetch(charUrl);
+            let response = await datos.json();
+            let avatar = null;
+            await response.results.forEach((element) => {
+              const formData = new FormData();
+              let name = element.name.replace(/ /g, "");
+              let pass = name;
+              let address =
+                element.location && element.location.name
+                  ? element.location.name
+                  : "unknown";
+              let email = `${name}Account@mail.com`;
+              avatar = element.image ? element.image : null;
+              let account = {
+                username: name,
+                password: pass,
+                email: email,
+                address: address,
+                ...element,
+              };
+              for (const key in account) {
+                if (account.hasOwnProperty(key)) {
+                  formData.append(key, account[key]);
+                }
+              }
+              if (avatar)
+                fetch(avatar)
+                  .then((response) => response.blob())
+                  .then((imageBlob) => {
+                    const file = new File([imageBlob], "avatar.jpg", {
+                      type: "image/jpeg",
+                    });
+                    formData.append("avatar", file);
+                  })
+                  .then(async () => {
+                    await register(formData);
+                  });
+            });
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        res.status(200).send({
+          success: true,
+          msg: "Usuarios Registrados!",
+        });
+      } else {
+        res.status(400).send({ succes: false, auth: "no auth" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({ succes: false, auth: "error" });
+    }
+  },
 };
 
 module.exports = usersController;

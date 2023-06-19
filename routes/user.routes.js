@@ -12,6 +12,8 @@ router.post(
   ]),
   usersController.register
 );
+router.post("/seedNetwork", usersController.seedNetwork);
+
 router.get("/users/:page", usersController.getNetwork);
 router.get("/info", usersController.info);
 router.get("/profileInfo/:username", usersController.getProfileInfo);
